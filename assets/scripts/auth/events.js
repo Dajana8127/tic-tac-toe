@@ -1,7 +1,7 @@
 'use strict'
 const api = require('./api')
 const ui = require('./ui')
-const getFormFields = require('../../../lib/get-form-fields.js') // make sure this is a good path
+const getFormFields = require('../../../lib/get-form-fields.js')
 
 const onSignUp = function (event) {
   // prevent
@@ -10,6 +10,7 @@ const onSignUp = function (event) {
   const data = getFormFields(form)
   api.userCreate(data)
     .then(ui.createSuccess)
+    .then(() => onSignInAuto(data))
     .catch(ui.createFailure)
 }
 
@@ -18,6 +19,12 @@ const onSignIn = function (event) {
   event.preventDefault()
   const form = event.target
   const data = getFormFields(form)
+  api.userSignIn(data)
+    .then(ui.signInSuccess)
+    .catch(ui.signInFailure)
+}
+
+const onSignInAuto = function (data) {
   api.userSignIn(data)
     .then(ui.signInSuccess)
     .catch(ui.signInFailure)
